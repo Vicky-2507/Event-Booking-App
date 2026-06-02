@@ -1,0 +1,159 @@
+<section class="events-container">
+
+  <div class="events-hero">
+    <div>
+      <p class="eyebrow">
+        Live Events
+      </p>
+
+      <h1>
+        Find your next ticket-worthy experience
+      </h1>
+
+      <p class="hero-copy">
+        Browse upcoming concerts, workshops, sports, food festivals, and more from one clean booking experience.
+      </p>
+    </div>
+
+    <div class="result-summary">
+      <strong>{{ events.length }}</strong>
+      <span>Upcoming events</span>
+    </div>
+  </div>
+
+  <div class="events-toolbar">
+    <app-search-bar
+      (searchEvent)="searchEvents($event)"
+    ></app-search-bar>
+  </div>
+
+  <div class="events-filter-panel">
+    <app-filter-bar
+      (categoryChange)="filterEvents($event)"
+    ></app-filter-bar>
+  </div>
+
+  <div
+    class="empty-state"
+    *ngIf="events.length === 0"
+  >
+    <h2>No events matched your search</h2>
+    <p>Try a different keyword or switch back to all categories.</p>
+  </div>
+
+  <div
+    class="events-grid"
+    [class.single-result]="events.length === 1"
+    *ngIf="events.length > 0"
+  >
+
+    <article
+      class="event-card"
+      *ngFor="let event of events"
+    >
+
+      <div class="event-media">
+        <img
+          [src]="event.image"
+          [alt]="event.title"
+        >
+
+        <span class="date-badge">
+          <strong>{{ event.date | date: 'dd' }}</strong>
+          {{ event.date | date: 'MMM' }}
+        </span>
+      </div>
+
+      <div class="event-content">
+
+        <div class="card-topline">
+          <p class="category-pill">
+            {{ event.category }}
+          </p>
+
+          <span class="seat-pill">
+            {{ event.availableSeats }} seats left
+          </span>
+        </div>
+
+        <h2>
+          {{ event.title }}
+        </h2>
+
+        <div
+          class="description"
+          [innerHTML]="event.description"
+        ></div>
+
+        <div class="meta">
+          <span>
+            <span
+              class="meta-icon"
+              aria-hidden="true"
+            >&#128197;</span>
+            {{ event.date | date: 'mediumDate' }}
+          </span>
+
+          <span>
+            <span
+              class="meta-icon"
+              aria-hidden="true"
+            >&#128337;</span>
+            {{ getEventTime(event) }}
+          </span>
+
+          <span>
+            <span
+              class="meta-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                focusable="false"
+              >
+                <path d="M12 21s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12Z"></path>
+                <circle
+                  cx="12"
+                  cy="9"
+                  r="2.4"
+                ></circle>
+              </svg>
+            </span>
+            {{ event.venue }}, {{ event.city }}
+          </span>
+        </div>
+
+        <div class="seat-row">
+          <span>
+            By {{ event.organizerName }}
+          </span>
+        </div>
+
+        <div class="card-footer">
+          <strong>
+            <ng-container *ngIf="event.price === 0; else paidPrice">
+              Free
+            </ng-container>
+
+            <ng-template #paidPrice>
+              &#8377;{{ event.price }}
+            </ng-template>
+          </strong>
+
+          <button
+            [routerLink]="[
+              '/event-details',
+              event.id
+            ]"
+          >
+            View Details
+          </button>
+        </div>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

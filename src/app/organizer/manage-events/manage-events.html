@@ -1,0 +1,200 @@
+<div class="manage-layout">
+
+  <app-sidebar></app-sidebar>
+
+  <section class="manage-container">
+
+    <div class="manage-header">
+      <p class="eyebrow">
+        Organizer Workspace
+      </p>
+
+      <h1>
+        Manage Events
+      </h1>
+
+      <p>
+        Review live listings, swap visuals, and remove outdated events from your catalog.
+      </p>
+    </div>
+
+    <div class="manage-grid">
+
+      <article
+        class="event-card"
+        *ngFor="let event of events"
+      >
+
+        <img
+          [src]="event.image"
+          [alt]="event.title"
+        >
+
+        <div class="card-body">
+          <p class="category-pill">
+            {{ event.category }}
+          </p>
+
+          <h2>
+            {{ event.title }}
+          </h2>
+
+          <div
+            class="description"
+            [innerHTML]="event.description"
+          ></div>
+
+          <div class="meta">
+            <span>{{ event.date | date: 'mediumDate' }}</span>
+            <span>{{ event.venue }}, {{ event.city }}</span>
+            <span>{{ event.status }}</span>
+          </div>
+
+          <strong class="price">
+            <ng-container *ngIf="event.price === 0; else paidEventPrice">
+              Free
+            </ng-container>
+
+            <ng-template #paidEventPrice>
+              &#8377;{{ event.price }}
+            </ng-template>
+          </strong>
+
+          <div class="summary-grid">
+            <div>
+              <span>Sold</span>
+              <strong>{{ getTicketsSold(event.id) }}</strong>
+            </div>
+
+            <div>
+              <span>Revenue</span>
+              <strong>&#8377;{{ getRevenue(event.id) }}</strong>
+            </div>
+
+            <div>
+              <span>Seats Left</span>
+              <strong>{{ event.availableSeats }}</strong>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button
+              class="edit-btn"
+              [routerLink]="[
+                '/organizer/edit-event',
+                event.id
+              ]"
+            >
+              Edit
+            </button>
+
+            <button
+              class="attendees-btn"
+              [routerLink]="[
+                '/organizer/attendees',
+                event.id
+              ]"
+            >
+              Attendees
+            </button>
+
+            <button
+              class="delete-btn"
+              (click)="openCancelDialog(event)"
+              [disabled]="event.status === 'Cancelled'"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+</div>
+
+<div
+  class="event-success-modal-backdrop"
+  *ngIf="successModal as modal"
+  role="alertdialog"
+  aria-modal="true"
+  aria-labelledby="manage-event-success-title"
+>
+  <div class="event-success-modal">
+    <div class="event-success-accent"></div>
+
+    <p class="event-success-kicker">
+      {{ modal.kicker }}
+    </p>
+
+    <h2 id="manage-event-success-title">
+      {{ modal.title }}
+    </h2>
+
+    <p>
+      {{ modal.message }}
+    </p>
+
+    <div class="event-success-loader"></div>
+  </div>
+</div>
+
+<div
+  class="cancel-modal-backdrop"
+  *ngIf="eventToCancel"
+  role="presentation"
+>
+  <section
+    class="cancel-modal"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="cancel-modal-title"
+    aria-describedby="cancel-modal-description"
+  >
+    <div
+      class="warning-icon"
+      aria-hidden="true"
+    >
+      !
+    </div>
+
+    <p class="modal-kicker">
+      Confirm cancellation
+    </p>
+
+    <h2 id="cancel-modal-title">
+      Cancel {{ eventToCancel.title }}?
+    </h2>
+
+    <p id="cancel-modal-description">
+      This event will be removed from your active listings. Attendees will no longer be able to book tickets for it.
+    </p>
+
+    <div class="event-preview">
+      <span>Event</span>
+      <strong>{{ eventToCancel.title }}</strong>
+      <small>{{ eventToCancel.venue }}, {{ eventToCancel.city }}</small>
+    </div>
+
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="keep-btn"
+        (click)="closeCancelDialog()"
+      >
+        Keep Event
+      </button>
+
+      <button
+        type="button"
+        class="confirm-delete-btn"
+        (click)="confirmCancelEvent()"
+      >
+        Yes, Cancel Event
+      </button>
+    </div>
+  </section>
+</div>

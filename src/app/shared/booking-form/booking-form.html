@@ -1,0 +1,224 @@
+<form
+  #bookingForm="ngForm"
+  class="booking-form"
+  (ngSubmit)="confirmBooking(bookingForm)"
+>
+
+  <div class="form-heading">
+    <span>Ticket Booking</span>
+
+    <h2>
+      Book Tickets
+    </h2>
+
+    <p>
+      {{ eventTitle }}
+    </p>
+  </div>
+
+  <div class="form-grid">
+    <label>
+      <span>Full Name</span>
+
+      <input
+        #nameInput="ngModel"
+        type="text"
+        placeholder="Enter your name"
+        [(ngModel)]="name"
+        name="name"
+        [class.input-error]="nameInput.invalid && nameInput.touched"
+        [disabled]="bookingSuccess"
+        required
+      >
+
+      <small
+        class="field-error"
+        *ngIf="nameInput.errors?.['required'] && nameInput.touched"
+      >
+        Name is required.
+      </small>
+    </label>
+
+    <label>
+      <span>Email Address</span>
+
+      <input
+        #emailInput="ngModel"
+        type="email"
+        placeholder="Enter your email"
+        [(ngModel)]="email"
+        name="email"
+        [class.input-error]="emailInput.invalid && emailInput.touched"
+        [disabled]="bookingSuccess"
+        email
+        required
+      >
+
+      <small
+        class="field-error"
+        *ngIf="emailInput.errors?.['required'] && emailInput.touched"
+      >
+        Email is required.
+      </small>
+
+      <small
+        class="field-error"
+        *ngIf="emailInput.errors?.['email'] && emailInput.touched"
+      >
+        Please enter a valid email address.
+      </small>
+    </label>
+  </div>
+
+  <label>
+    <span>Phone Number</span>
+
+    <div class="phone-row">
+      <select
+        #countryCodeInput="ngModel"
+        class="country-code"
+        [(ngModel)]="countryCode"
+        name="countryCode"
+        [disabled]="bookingSuccess"
+        required
+      >
+        <option
+          *ngFor="let country of countryCodes"
+          [value]="country.code"
+        >
+          {{ country.code }} {{ country.label }}
+        </option>
+      </select>
+
+      <input
+        #phoneInput="ngModel"
+        type="tel"
+        placeholder="Enter phone number"
+        [(ngModel)]="phone"
+        name="phone"
+        [class.input-error]="phoneInput.invalid && phoneInput.touched"
+        [disabled]="bookingSuccess"
+        [pattern]="phonePattern"
+        required
+      >
+    </div>
+
+    <small
+      class="field-error"
+      *ngIf="phoneInput.errors?.['required'] && phoneInput.touched"
+    >
+      Phone number is required.
+    </small>
+
+    <small
+      class="field-error"
+      *ngIf="phoneInput.errors?.['pattern'] && phoneInput.touched"
+    >
+      Enter a valid phone number.
+    </small>
+  </label>
+
+  <label>
+    <span>Tickets</span>
+
+    <input
+      #ticketsInput="ngModel"
+      type="number"
+      min="1"
+      [max]="availableSeats"
+      placeholder="Enter tickets"
+      [(ngModel)]="tickets"
+      name="tickets"
+      [class.input-error]="ticketsInput.invalid && ticketsInput.touched"
+      [disabled]="bookingSuccess"
+      required
+    >
+
+    <small
+      class="field-error"
+      *ngIf="ticketsInput.errors?.['required'] && ticketsInput.touched"
+    >
+      Number of tickets is required.
+    </small>
+
+    <small
+      class="field-error"
+      *ngIf="tickets && tickets > availableSeats && ticketsInput.touched"
+    >
+      Tickets cannot be more than available seats.
+    </small>
+  </label>
+
+  <p
+    class="error-message"
+    *ngIf="formError"
+  >
+    {{ formError }}
+  </p>
+
+  <p
+    class="error-message"
+    *ngIf="seatError"
+  >
+    {{ seatError }}
+  </p>
+
+  <div class="booking-summary">
+    <div>
+      <span>Price per ticket</span>
+      <strong>
+        <ng-container *ngIf="ticketPrice === 0; else paidTicketPrice">
+          Free
+        </ng-container>
+
+        <ng-template #paidTicketPrice>
+          &#8377;{{ ticketPrice }}
+        </ng-template>
+      </strong>
+    </div>
+
+    <div>
+      <span>Selected tickets</span>
+      <strong>
+        {{ tickets || '-' }}
+      </strong>
+    </div>
+
+    <div class="summary-total">
+      <span>Total amount</span>
+      <strong>
+        <ng-container *ngIf="totalAmount === 0; else paidTotalAmount">
+          Free
+        </ng-container>
+
+        <ng-template #paidTotalAmount>
+          &#8377;{{ totalAmount }}
+        </ng-template>
+      </strong>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button
+      type="submit"
+      [disabled]="availableSeats === 0 || bookingSuccess"
+    >
+      {{
+        bookingSuccess
+          ? 'Booking Confirmed'
+          : availableSeats === 0
+            ? 'Sold Out'
+            : 'Confirm Booking'
+      }}
+    </button>
+
+    <a
+      *ngIf="backLink"
+      class="back-action"
+      [routerLink]="backLink"
+    >
+      Back
+    </a>
+  </div>
+
+</form>

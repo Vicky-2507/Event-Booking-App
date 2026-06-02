@@ -1,0 +1,195 @@
+<div class="attendees-layout">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="attendees-container">
+
+    <header class="page-header">
+      <h1>
+        Booking Attendee List
+      </h1>
+    </header>
+
+    <section class="attendee-tools">
+      <div
+        class="tabs"
+        aria-label="Attendee status filters"
+      >
+        <button
+          type="button"
+          [class.active]="activeFilter === 'All'"
+          (click)="setFilter('All')"
+        >
+          All Attendees ({{ bookings.length }})
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter === 'Confirmed'"
+          (click)="setFilter('Confirmed')"
+        >
+          Confirmed ({{ confirmedCount }})
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter === 'Cancelled'"
+          (click)="setFilter('Cancelled')"
+        >
+          Cancelled ({{ cancelledCount }})
+        </button>
+      </div>
+
+      <div class="filter-controls">
+        <label class="date-filter">
+          <span
+            class="date-icon"
+            aria-hidden="true"
+          ></span>
+          <span class="date-copy">
+            <span>Date Range</span>
+            <strong>{{ dateFilter }}</strong>
+          </span>
+          <select
+            aria-label="Filter bookings by date range"
+            [formControl]="dateFilterControl"
+            (change)="onDateFilterChange()"
+          >
+            <option>All Dates</option>
+            <option>Today</option>
+            <option>This Week</option>
+            <option>This Month</option>
+          </select>
+          <span
+            class="date-chevron"
+            aria-hidden="true"
+          ></span>
+        </label>
+
+        <label class="search-box">
+          <span aria-hidden="true">Search</span>
+          <input
+            type="search"
+            placeholder="Name, email or phone"
+            [formControl]="searchControl"
+            (input)="onSearchChange()"
+          >
+        </label>
+
+      </div>
+    </section>
+
+    <div
+      class="empty-state"
+      *ngIf="filteredBookings.length === 0"
+    >
+      No bookings found for this view.
+    </div>
+
+    <section
+      class="table-card"
+      *ngIf="filteredBookings.length > 0"
+    >
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Attendee</th>
+            <th>Contact</th>
+            <th>Ticket</th>
+            <th>Status</th>
+            <th>Booking Date</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let booking of paginatedBookings"
+          >
+
+            <td>
+              <div class="attendee-cell">
+                <span class="avatar">
+                  {{ getInitials(booking.name) }}
+                </span>
+
+                <div>
+                  <strong>{{ booking.name }}</strong>
+                  <small>#{{ booking.bookingId }}</small>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span class="contact-line">{{ booking.email }}</span>
+              <span class="contact-line">{{ booking.phone }}</span>
+            </td>
+
+            <td>
+              <span class="ticket-count">
+                {{ booking.tickets }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="status"
+                [class.cancelled]="booking.status === 'Cancelled'"
+              >
+                {{ booking.status }}
+              </span>
+            </td>
+
+            <td>
+              <strong class="date-cell">
+                {{ booking.bookingDate | date: 'mediumDate' }}
+              </strong>
+              <small class="booking-time">
+                {{ booking.bookingDate | date: 'shortTime' }}
+              </small>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      <footer class="table-footer">
+        <div class="pagination">
+          <button
+            type="button"
+            (click)="goToPage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+          >
+            Prev
+          </button>
+
+          <button
+            type="button"
+            *ngFor="let page of pageNumbers"
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+
+          <button
+            type="button"
+            (click)="goToPage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+          >
+            Next
+          </button>
+        </div>
+      </footer>
+    </section>
+
+  </div>
+
+</div>

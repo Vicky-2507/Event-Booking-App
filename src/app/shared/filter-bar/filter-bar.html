@@ -1,0 +1,99 @@
+<div class="filter-container">
+
+  <label class="filter-field">
+    <span class="field-label">
+      Category
+    </span>
+
+    <select
+      [(ngModel)]="filters.category"
+      (change)="filterCategory()"
+      aria-label="Filter by category"
+    >
+      <option value="">All Categories</option>
+      <option
+        *ngFor="let category of categories"
+        [value]="category"
+      >
+        {{ category }}
+      </option>
+    </select>
+  </label>
+
+  <label class="filter-field">
+    <span class="field-label">
+      Price
+    </span>
+
+    <select
+      [(ngModel)]="filters.price"
+      (change)="filterCategory()"
+      aria-label="Filter by price"
+    >
+      <option
+        *ngFor="let option of priceOptions"
+        [value]="option.value"
+      >
+        {{ option.label }}
+      </option>
+    </select>
+  </label>
+
+  <div class="filter-field date-range">
+    <span class="field-label">
+      Date
+    </span>
+
+    <button
+      type="button"
+      class="date-range-toggle"
+      (click)="toggleDateRange()"
+      aria-label="Filter by date range"
+    >
+      {{ dateRangeLabel }}
+    </button>
+
+    <div
+      class="date-range-panel"
+      *ngIf="dateRangeOpen"
+    >
+      <label>
+        <span>From</span>
+        <input
+          type="date"
+          [(ngModel)]="draftFromDate"
+          aria-label="Date range start"
+        >
+      </label>
+
+      <label>
+        <span>To</span>
+        <input
+          type="date"
+          [(ngModel)]="draftToDate"
+          [min]="draftFromDate || undefined"
+          aria-label="Date range end"
+        >
+      </label>
+
+      <div class="date-range-actions">
+        <button
+          type="button"
+          class="clear-btn"
+          (click)="clearDateRange()"
+        >
+          Clear
+        </button>
+
+        <button
+          type="button"
+          class="apply-btn"
+          (click)="applyDateRange()"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

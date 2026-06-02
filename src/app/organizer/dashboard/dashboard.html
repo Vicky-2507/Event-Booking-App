@@ -1,0 +1,185 @@
+<div class="dashboard-layout">
+
+  <app-sidebar></app-sidebar>
+
+  <section class="dashboard-container">
+
+    <header class="dashboard-header">
+      <div>
+        <p class="eyebrow">Organizer Dashboard</p>
+
+        <h1>
+          Track bookings, capacity, and event performance
+        </h1>
+
+        <p class="header-copy">
+          A focused workspace for keeping listings active and seats moving.
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <a
+          routerLink="/organizer/create-event"
+          class="primary-action"
+        >
+          Create Event
+        </a>
+
+        <a
+          routerLink="/organizer/manage-events"
+          class="secondary-action"
+        >
+          Manage Events
+        </a>
+      </div>
+    </header>
+
+    <section class="hero-grid">
+      <article class="hero-panel">
+        <div>
+          <span>Seat Occupancy</span>
+          <strong>{{ occupancyRate }}%</strong>
+        </div>
+
+        <div class="progress-track">
+          <span [style.width.%]="occupancyRate"></span>
+        </div>
+
+        <p>
+          {{ ticketsSold }} tickets sold from {{ totalSeats }} listed seats.
+        </p>
+      </article>
+
+      <article class="highlight-card">
+        <span class="panel-kicker">Next Featured Event</span>
+
+        @if (featuredEvent) {
+          <img
+            [src]="featuredEvent.image"
+            [alt]="featuredEvent.title"
+          >
+
+          <div>
+            <strong>{{ featuredEvent.title }}</strong>
+            <p>{{ getEventDate(featuredEvent) }} - {{ featuredEvent.venue }}</p>
+          </div>
+        } @else {
+          <strong>{{ nextEventTitle }}</strong>
+          <p>Create an event to start accepting bookings.</p>
+        }
+      </article>
+    </section>
+
+    <section class="stats-grid">
+      <article
+        class="stat-card"
+        *ngFor="let stat of stats"
+        [ngClass]="stat.tone"
+      >
+        <span>{{ stat.label }}</span>
+        <strong>{{ stat.value }}</strong>
+        <p>{{ stat.note }}</p>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel events-panel">
+        <div class="panel-header">
+          <div>
+            <span class="panel-kicker">Upcoming Events</span>
+            <h2>Performance Snapshot</h2>
+          </div>
+
+          <a routerLink="/organizer/manage-events">View all</a>
+        </div>
+
+        @if (eventSummaries.length > 0) {
+          <div class="event-list">
+            <article
+              class="event-row"
+              *ngFor="let summary of eventSummaries"
+            >
+              <div class="event-thumb">
+                <img
+                  [src]="summary.event.image"
+                  [alt]="summary.event.title"
+                >
+
+                <span>{{ getEventDate(summary.event) }}</span>
+              </div>
+
+              <div class="event-info">
+                <div class="event-title-row">
+                  <strong>{{ summary.event.title }}</strong>
+                  <span>{{ summary.event.category }}</span>
+                </div>
+
+                <p>{{ summary.event.venue }}, {{ summary.event.city }}</p>
+
+                <div class="occupancy-row">
+                  <span>Seat occupancy</span>
+                  <strong>{{ summary.occupancy }}%</strong>
+                </div>
+
+                <div class="mini-progress">
+                  <span [style.width.%]="summary.occupancy"></span>
+                </div>
+              </div>
+
+              <div class="event-metrics">
+                <div>
+                  <span>Tickets sold</span>
+                  <strong>{{ summary.ticketsSold }}</strong>
+                </div>
+
+                <div>
+                  <span>Revenue</span>
+                  <strong>Rs. {{ summary.revenue }}</strong>
+                </div>
+              </div>
+            </article>
+          </div>
+        } @else {
+          <p class="empty-copy">
+            No upcoming active events yet.
+          </p>
+        }
+      </article>
+
+    </section>
+
+    <section class="panel bookings-panel">
+      <div class="panel-header">
+        <div>
+          <span class="panel-kicker">Recent Bookings</span>
+          <h2>Latest Confirmed Tickets</h2>
+        </div>
+
+        <a routerLink="/organizer/attendees">View attendees</a>
+      </div>
+
+      @if (recentBookings.length > 0) {
+        <div class="booking-list">
+          <article
+            class="booking-row"
+            *ngFor="let booking of recentBookings"
+          >
+            <div>
+              <strong>{{ booking.name }}</strong>
+              <span>{{ booking.eventTitle }}</span>
+            </div>
+
+            <span>{{ booking.tickets }} tickets</span>
+            <strong>Rs. {{ booking.totalAmount }}</strong>
+          </article>
+        </div>
+      } @else {
+        <p class="empty-copy">
+          Confirmed bookings will appear here.
+        </p>
+      }
+    </section>
+
+  </section>
+
+</div>

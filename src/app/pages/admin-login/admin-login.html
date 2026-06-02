@@ -1,0 +1,73 @@
+<section class="login-shell">
+
+  <form [formGroup]="loginForm" class="login-card" (ngSubmit)="login()">
+    <p class="eyebrow">
+      Admin Access
+    </p>
+
+    <p class="intro">
+      Sign in to create events.
+    </p>
+
+    <label>
+      <span>Email</span>
+      <input
+        type="email" placeholder="admin@gmail.com" 
+        formControlName="email"
+        [class.input-error]="loginForm.controls.email.invalid && loginForm.controls.email.touched" [disabled]="showSuccessModal" email required>
+
+      <small class="field-error" *ngIf="loginForm.controls.email.errors?.['required'] && loginForm.controls.email.touched">
+        Email is required.
+      </small>
+
+      <small class="field-error" *ngIf="loginForm.controls.email.errors?.['email'] && loginForm.controls.email.touched">
+        Please enter a valid email address.
+      </small>
+    </label>
+
+    <label>
+      <span>Password</span>
+      <input 
+       type="password" placeholder="Enter password"
+       formControlName="password" 
+       [class.input-error]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+        [disabled]="showSuccessModal" minlength="6" required>
+
+      <small class="field-error" *ngIf="loginForm.controls.password.errors?.['required'] && loginForm.controls.password.touched">
+        Password is required.
+      </small>
+
+      <small class="field-error" *ngIf="loginForm.controls.password.errors?.['minlength'] && loginForm.controls.password.touched">
+        Password must be at least 6 characters.
+      </small>
+    </label>
+
+    <p class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </p>
+
+    <button type="submit" [disabled]="showSuccessModal">
+      Sign In
+    </button>
+
+    <a routerLink="/" class="back-link">
+      Back to events
+    </a>
+  </form>
+
+  <div class="success-modal-backdrop" *ngIf="showSuccessModal" role="alertdialog" aria-modal="true"
+    aria-labelledby="admin-login-success-title">
+    <div class="success-modal">
+      <h2 id="admin-login-success-title">
+        Login successful
+      </h2>
+
+      <p>
+        Welcome back, admin. Redirecting to your organizer panel.
+      </p>
+
+      <div class="redirect-loader"></div>
+    </div>
+  </div>
+
+</section>
