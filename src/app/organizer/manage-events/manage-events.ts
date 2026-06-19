@@ -102,7 +102,7 @@ export class ManageEvents implements OnDestroy {
 
     this.events =
       this.eventService
-        .getActiveEvents()
+        .getUpcomingActiveEvents()
         .sort(
           (firstEvent, secondEvent) =>
             this.getEventStartTime(secondEvent) -
