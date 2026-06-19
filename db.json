@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Music Concert",
+      "city": "Chennai",
+      "price": 500
+    },
+    {
+      "id": 2,
+      "title": "Tech Meetup",
+      "city": "Bangalore",
+      "price": 300
+    }
+  ]
+}
