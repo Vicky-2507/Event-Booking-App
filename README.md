@@ -4,6 +4,8 @@ An Angular event booking application for browsing events, viewing event details,
 
 The project uses local browser storage for demo data, so it can run without a backend API.
 
+Live app: https://vicky-2507.github.io/Event-Booking-App/
+
 ## Project Description
 
 Event Booking System is a frontend-only Angular application with two main user flows:
@@ -97,6 +99,20 @@ ng build
 ```
 
 Build output will be generated in the `dist/` folder.
+
+## GitHub Pages Deployment
+
+Build and deploy to the live GitHub Pages URL:
+
+```bash
+npm run deploy
+```
+
+This deploys the app to:
+
+```text
+https://vicky-2507.github.io/Event-Booking-App/
+```
 
 ## Run Tests
 
